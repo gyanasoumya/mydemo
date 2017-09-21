@@ -1,0 +1,119 @@
+package MangoDB;
+
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Hashtable;
+
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.hssf.usermodel.HSSFSheet;
+import org.apache.poi.hssf.usermodel.HSSFRow;
+import org.apache.poi.hssf.usermodel.HSSFCell;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.WorkbookFactory;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.WorkbookFactory;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
+
+import com.gdoc.gls.constant.CountryConstant;
+import com.gdoc.gls.constant.CustomerConstant;
+
+import java.io.FileInputStream;
+import java.util.Iterator;
+import java.util.Vector;
+
+public class DataReadCol {
+
+	@SuppressWarnings("rawtypes")
+	public static void main(String[] args) throws Exception {
+
+		String filename = "C:/Users/JAI JAGANNATHA/Documents/country.xlsx";
+		FileInputStream fis = null;
+
+		try {
+			String json = "{\"id_id\":" + CustomerConstant._id + ",\"id\":"
+					+ CustomerConstant.id + ",\"lid\":" + CustomerConstant.lid
+					+ ",\"association\":" + CustomerConstant.association + ",\"classificationNodes\":[";
+			fis = new FileInputStream(filename);
+
+			InputStream inp = new FileInputStream(
+					"C:/Users/JAI JAGANNATHA/Documents/country.xlsx");
+			int ctr = 0;
+			Workbook wb = WorkbookFactory.create(inp);
+			Sheet sheet = wb.getSheetAt(0);
+
+			Iterator rowIter = (sheet).iterator();
+			int rownum = 1;
+			while (rowIter.hasNext()) { // ROW = 1.0 prasanta 123.0 m
+				Row myRow = (Row) rowIter.next();
+				Iterator cellIter = myRow.cellIterator();
+				if (rownum > 1) {
+					Vector<String> cellStoreVector = new Vector<String>();
+					while (cellIter.hasNext()) {
+						Cell myCell = (Cell) cellIter.next();
+						System.out.print(myCell.toString());
+						System.out.print(" ");
+						// String cellvalue =
+						// ((org.apache.poi.ss.usermodel.Cell)
+						// myCell).getStringCellValue();
+						String cellvalue = myCell.toString();
+						cellStoreVector.addElement(cellvalue);
+					}
+					String firstcolumnValue = null;
+					String secondcolumnValue = null;
+
+					int i = 0;
+					firstcolumnValue = cellStoreVector.get(i).toString();
+					secondcolumnValue = cellStoreVector.get(i + 1).toString();
+
+					json = json + "{\"id\":" + "\"" + CountryConstant.id
+							+ secondcolumnValue + "\",\"lid\":\""
+							+ CountryConstant.lid + secondcolumnValue
+							+ "\",\"home\":\"" + CountryConstant.home
+							+ secondcolumnValue + "\",\"name\":\""
+							+ secondcolumnValue+"\",\"description\":\""+CountryConstant.description + "\"},";
+					System.out.println(json);
+
+					insertQuery(firstcolumnValue, secondcolumnValue);
+				}
+				rownum++;
+			}
+			json= DataReadCol.removeLastChar(json, 1);
+			json=json+"]}";
+			System.out.println("--------------------------");
+			System.out.println(json);
+
+		} catch (IOException e) {
+
+			e.printStackTrace();
+
+		} finally {
+
+			if (fis != null) {
+
+				fis.close();
+
+			}
+
+		}
+
+		// showExelData(sheetData);
+
+	}
+
+	private static void insertQuery(String firstcolumnvalue,
+			String secondcolumnvalue) {
+
+		System.out.println(firstcolumnvalue + " " + secondcolumnvalue);
+
+	}
+
+	private static String removeLastChar(String str, Integer numChar) {
+		return str.substring(0, str.length() - numChar);
+	}
+}
