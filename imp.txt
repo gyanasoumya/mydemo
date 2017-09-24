@@ -1,29 +1,24 @@
 package MangoDB;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Hashtable;
-
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.hssf.usermodel.HSSFSheet;
-import org.apache.poi.hssf.usermodel.HSSFRow;
-import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
-import org.apache.poi.ss.usermodel.WorkbookFactory;
-import org.apache.poi.xssf.usermodel.XSSFSheet;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
-
 import com.gdoc.gls.constant.CountryConstant;
 import com.gdoc.gls.constant.CustomerConstant;
+import com.mongodb.DB;
+import com.mongodb.DBCollection;
+import com.mongodb.DBCursor;
+import com.mongodb.DBObject;
+import com.mongodb.Mongo;
+import com.mongodb.MongoException;
+import com.mongodb.util.JSON;
 
 import java.io.FileInputStream;
+import java.net.UnknownHostException;
 import java.util.Iterator;
 import java.util.Vector;
 
@@ -36,7 +31,7 @@ public class DataReadCol {
 		FileInputStream fis = null;
 
 		try {
-			String json = "{\"id_id\":" + CustomerConstant._id + ",\"id\":"
+			String json = "{\"id\":"
 					+ CustomerConstant.id + ",\"lid\":" + CustomerConstant.lid
 					+ ",\"association\":" + CustomerConstant.association + ",\"classificationNodes\":[";
 			fis = new FileInputStream(filename);
@@ -87,6 +82,8 @@ public class DataReadCol {
 			json=json+"]}";
 			System.out.println("--------------------------");
 			System.out.println(json);
+			insertMongoTable(json, "MyDb", "IMP");
+			
 
 		} catch (IOException e) {
 
@@ -99,7 +96,7 @@ public class DataReadCol {
 				fis.close();
 
 			}
-
+			
 		}
 
 		// showExelData(sheetData);
@@ -116,4 +113,32 @@ public class DataReadCol {
 	private static String removeLastChar(String str, Integer numChar) {
 		return str.substring(0, str.length() - numChar);
 	}
+	
+	private static void insertMongoTable(String json, String dbName, String collectionName){
+		try {
+
+			Mongo mongo = new Mongo("localhost", 27017);
+			DB db = mongo.getDB(dbName);
+			DBCollection collection = db.getCollection(collectionName);
+
+			// convert JSON to DBObject directly
+			DBObject dbObject = (DBObject) JSON
+					.parse(json);
+
+			collection.insert(dbObject);
+
+			DBCursor cursorDoc = collection.find();
+			while (cursorDoc.hasNext()) {
+				System.out.println(cursorDoc.next());
+			}
+
+			System.out.println("Done");
+
+		} catch (UnknownHostException e) {
+			e.printStackTrace();
+		} catch (MongoException e) {
+			e.printStackTrace();
+		}
+	}
+	
 }
