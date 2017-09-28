@@ -204,3 +204,93 @@ public class DataReadCol2 {
 	}
 
 }
+
+
+
+package com.gdoc.gls.constant;
+
+public class AccountConstant {
+	public static String id = "urn:hsbc:cmv:gdocs:party:taxonomies:accountType:";// accountTypeCountryAssociations";
+	public static String home = "/proudct/taxonomise/urn/hsbc:cmb:gdocs:product:taxonomies:accountType:/nodes/urn:hsbc:cmb:gdocs:";// /AssociationType";
+
+	public static String associationTypeId = "urn:hsbc:cmv:gdocs:party:taxonomies:assoType:accountTypeCountryAssociation";
+	public static String associationTypeHome = "/proudct/taxonomise/urn/hsbc:cmv:gdocs:party:taxonomies:";// /AssociationType";
+
+	public static String sourceObjectId = "urn:hsbc:cmv:gdocs:party:taxonomies:assoType:accountType:";
+	public static String sourceObjectHome = "/proudct/taxonomise/urn/hsbc:cmv:gdocs:party:taxonomies:assoType:accountType:";// /AssociationType";
+
+	public static String targetObjectId = "urn:hsbc:cmv:gdocs:party:taxonomies:assoType:accountTypeCountryAssociation:";
+	public static String targetObjectHome = "/proudct/taxonomise/urn/hsbc:cmv:gdocs:party:taxonomies:country:";// /AssociationType";
+
+}
+
+
+
+
+
+
+
+
+
+
+package com.gdoc.gls.constant;
+
+public class Account {
+	private String country;
+	private String type;
+
+	public String getCountry() {
+		return country;
+	}
+
+	public void setCountry(String country) {
+		this.country = country;
+	}
+
+	public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
+	}
+
+	@Override
+	public String toString() {
+		return "Account [country=" + country + ", type=" + type + "]";
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((country == null) ? 0 : country.hashCode());
+		result = prime * result + ((type == null) ? 0 : type.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Account other = (Account) obj;
+		if (country == null) {
+			if (other.country != null)
+				return false;
+		} else if (!country.equals(other.country))
+			return false;
+		if (type == null) {
+			if (other.type != null)
+				return false;
+		} else if (!type.equals(other.type))
+			return false;
+		return true;
+	}
+
+}
+
+
