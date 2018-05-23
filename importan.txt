@@ -1,0 +1,31 @@
+package com.hsbc.gdocs.glspod;
+
+import java.util.ArrayList;
+
+public class StringManupulation {
+	public static void main(String args[]) {
+		String inputStr = "$200m,$100m,$100m";
+		String strArr[] = inputStr.split(",");
+		ArrayList<String> dollarList = new ArrayList<String>();
+
+		for (int i = 0; i < strArr.length; i++) {
+			String dollar = strArr[i];
+			String dollarValue = dollar.substring(1, dollar.length() - 1);
+			dollarList.add(dollarValue);
+
+		}
+		int sum = 0;
+		for (int i = 1; i < dollarList.size(); i++) {
+			String dollarValue = dollarList.get(i);
+			sum = sum + Integer.parseInt(dollarValue);
+		}
+		int firstValue= Integer.parseInt(dollarList.get(0));
+		if(sum==firstValue) {
+			System.out.println("true");
+		}else {
+			System.out.println("Not Same");
+		}
+
+	}
+
+}
